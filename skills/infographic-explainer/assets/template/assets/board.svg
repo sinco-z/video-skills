@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1050" viewBox="0 0 1600 1050">
+<defs><marker id="arrow" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path d="M2 2 L10 6 L2 10" fill="none" stroke="#64615a" stroke-width="1.5"/></marker></defs>
+<g id="heading"><text x="78" y="102" font-size="66" style="fill:#b63c2f">2026 商业模式</text><text x="80" y="184" font-size="39">把现成 AI 能力做成可售卖系统</text><text x="80" y="256" font-size="29">不管在哪个城市，先找到真实的客户需求</text></g>
+<g id="income"><path class="outline" d="M920 42 Q902 42 902 71 L905 228 Q906 249 937 250 L1486 247 Q1513 247 1512 219 L1509 71 Q1507 41 1478 41 Z"/><text x="950" y="142" font-size="69">7位数</text><text x="1172" y="138" font-size="65" fill="#64615a">→</text><text x="1270" y="142" font-size="69" class="gold">8位数</text><text x="1005" y="212" font-size="28" class="small">规模目标，仍需业务验证</text></g>
+<g id="flow">
+<path d="M98 348 Q76 348 77 378 L80 520 Q80 546 108 546 L306 545 Q332 544 333 518 L330 374 Q328 348 302 349 Z" fill="#ffed9e" stroke="#252421" stroke-width="3.3"/>
+<text x="113" y="388" class="small" style="fill:#64615a">这门生意的核心</text><text x="116" y="450" font-size="54">AI广场</text><text x="111" y="501" font-size="26">把能力摆上摊位</text>
+<g class="outline" marker-end="url(#arrow)" stroke="#64615a"><path d="M340 449 L388 449"/><path d="M636 449 L683 449"/><path d="M931 449 L978 449"/><path d="M1226 449 L1273 449"/></g>
+<rect x="402" y="350" width="222" height="194" rx="30" fill="#fffef9" stroke="#252421" stroke-width="3.3" transform="rotate(-.4 513 447)"/>
+<text x="437" y="402" class="cardtitle">卖工具箱</text><text x="430" y="452" class="small">按行业打包</text><text x="430" y="489" class="small">让客户直接用</text>
+<rect x="697" y="350" width="222" height="194" rx="31" fill="#fffef9" stroke="#252421" stroke-width="3.3" transform="rotate(.5 808 447)"/>
+<text x="730" y="402" class="cardtitle">行业定制</text><text x="725" y="452" class="small">围绕具体需求</text><text x="725" y="489" class="small">交付实际结果</text>
+<rect x="992" y="350" width="222" height="194" rx="29" fill="#ffed9e" stroke="#252421" stroke-width="3.3" transform="rotate(-.3 1103 447)"/>
+<text x="1025" y="402" class="cardtitle">持续收费</text><text x="1020" y="452" class="small">持续使用与维护</text><text x="1020" y="489" class="small">服务创造价值</text>
+<rect x="1287" y="350" width="222" height="194" rx="30" fill="#fffef9" stroke="#252421" stroke-width="3.3"/>
+<text x="1320" y="402" class="cardtitle">连锁复制</text><text x="1315" y="452" class="small">先跑通一处</text><text x="1315" y="489" class="small">再复制经验</text>
+</g>
+<g id="ribbon"><rect x="80" y="598" width="1430" height="74" rx="12" fill="#252421"/><text x="795" y="645" font-size="32" text-anchor="middle" style="fill:#fffef9">工具箱　 →　 行业定制　 →　 持续服务　 →　 规模复制</text></g>
+<g id="recurring"><rect x="79" y="720" width="682" height="202" rx="31" fill="#fffef9" stroke="#252421" stroke-width="3.2"/><text x="111" y="764" class="small">系统跑起来之后</text><text x="111" y="826" font-size="41">第一个月，服务 100 个客户</text><text x="111" y="882" class="small">后续维护、支持和更新，才是长期关系</text><rect x="803" y="720" width="706" height="202" rx="32" fill="#ffed9e" stroke="#252421" stroke-width="3.2"/><text x="837" y="764" class="small">持续服务的前提</text><text x="837" y="826" font-size="43">客户持续使用</text><text x="837" y="881" class="body">有价值，才有机会持续收费</text></g>
+<text x="80" y="998" class="small" style="font-size:23px">从一张图出发，把复杂的思路讲清楚。</text>
+</svg>

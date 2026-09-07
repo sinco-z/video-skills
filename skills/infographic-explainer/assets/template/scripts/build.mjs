@@ -1,64 +1,54 @@
-import {readFileSync, writeFileSync, copyFileSync, existsSync, mkdirSync} from 'node:fs';
-import {resolve, sep, dirname} from 'node:path';
+import {readFileSync,writeFileSync,copyFileSync,existsSync,mkdirSync,realpathSync,statSync} from 'node:fs';
+import {resolve,sep,dirname} from 'node:path';
 import {fileURLToPath} from 'node:url';
+import {execFileSync} from 'node:child_process';
 import assert from 'node:assert/strict';
+import {resolveStory} from './story.mjs';
 
-const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
-const story = JSON.parse(readFileSync(resolve(root, 'story.json'), 'utf8'));
-const finite = (n) => typeof n === 'number' && Number.isFinite(n);
-assert(finite(story.duration) && story.duration > 0, 'duration must be positive');
-function windowCheck(start, end, label) {
-  assert(finite(start) && finite(end) && start >= 0 && end > start && end <= story.duration,
-    `${label}: invalid time window`);
+const root=resolve(dirname(fileURLToPath(import.meta.url)),'..');
+function asset(src) {
+  assert(typeof src==='string' && src && !src.includes('\\'),'Use a forward-slash project-relative asset path');
+  const path=resolve(root,src);
+  assert(path.startsWith(root+sep)&&existsSync(path)&&statSync(path).isFile(),`Missing project asset: ${src}`);
+  assert(realpathSync(path).startsWith(realpathSync(root)+sep),`Asset resolves outside the project: ${src}`);
+  return path;
 }
-function disjoint(items, label) {
-  const sorted = [...items].sort((a, b) => a.start - b.start);
-  for (let i = 1; i < sorted.length; i++) {
-    assert(sorted[i].start >= sorted[i - 1].end, `${label}: overlapping windows`);
+const input=JSON.parse(readFileSync(resolve(root,'story.json'),'utf8'));
+const durations=new Map();
+const story=resolveStory(input,src=>{
+  if(!durations.has(src)) {
+    const path=asset(src);
+    let result;
+    try {result=JSON.parse(execFileSync('ffprobe',['-v','error','-show_entries','format=duration:stream=codec_type','-of','json',path],{encoding:'utf8'}));}
+    catch(error) {throw new Error(`Cannot probe ${src}. Install FFmpeg/ffprobe and verify the file. ${error.message}`);}
+    assert(result.streams?.some(s=>s.codec_type==='audio'),`Asset has no audio stream: ${src}`);
+    durations.set(src,Number(result.format.duration));
   }
-}
-function camera(pose) {
-  assert(finite(pose.x) && finite(pose.y) && finite(pose.scale) && pose.scale > 0, 'Invalid camera pose');
-}
-camera(story.initialCamera);
-for (const shot of story.shots) {
-  camera(shot);
-  windowCheck(shot.start, shot.start + shot.duration, 'Camera');
-}
-disjoint(story.shots.map(s => ({start: s.start, end: s.start + s.duration})), 'Camera');
-const ids = new Set();
-for (const line of story.annotations) {
-  assert(typeof line.id === 'string' && /^[a-zA-Z][\w-]*$/.test(line.id), 'Invalid annotation ID');
-  assert(!ids.has(line.id), 'Use distinct SVG paths for separate annotations');
-  ids.add(line.id);
-  windowCheck(line.start, line.end, line.id);
-  assert(finite(line.draw) && line.draw > .01 && line.start + line.draw <= line.end - .15,
-    `${line.id}: leave time for drawing and fade-out`);
-}
-disjoint(story.annotations, 'Annotations (only one may be visible)');
-for (const caption of story.captions) {
-  windowCheck(caption.start, caption.end, 'Caption');
-  assert(caption.end - caption.start >= .31, 'Caption too short for entrance and exit');
-  assert(typeof caption.text === 'string' && caption.text.trim(), 'Caption text required');
-}
-disjoint(story.captions, 'Captions');
-const escapeHtml = s => s.replaceAll('&', '&amp;').replaceAll('"', '&quot;').replaceAll('<', '&lt;').replaceAll('>', '&gt;');
-const audio = story.audio.map((clip, i) => {
-  windowCheck(clip.start, clip.start + clip.duration, 'Audio');
-  assert(typeof clip.src === 'string' && !clip.src.includes('\\'), 'Use forward-slash relative audio paths');
-  const path = resolve(root, clip.src);
-  assert(path.startsWith(root + sep) && existsSync(path), `Missing project audio: ${clip.src}`);
-  return `<audio id="voice${i}" src="${escapeHtml(clip.src)}" data-start="${clip.start}" data-duration="${clip.duration}" data-track-index="2"></audio>`;
-}).join('\n');
-disjoint(story.audio.map(c => ({start: c.start, end: c.start + c.duration})), 'Narration');
-const template = readFileSync(resolve(root, 'index.html.in'), 'utf8');
-const html = template.replaceAll('{{DURATION}}', String(story.duration))
-  .replace('<!-- Captions and audio are built synchronously from story.js. -->', audio)
-  .replace('<script src="runtime.js"></script>', () => '<script>\n' + readFileSync(resolve(root, 'runtime.js'), 'utf8') + '\n</script>');
-mkdirSync(resolve(root, 'assets'), {recursive: true});
-const gsap = resolve(root, 'node_modules/gsap/dist/gsap.min.js');
-assert(existsSync(gsap), 'Run pnpm install before building');
-copyFileSync(gsap, resolve(root, 'assets/gsap.min.js'));
-writeFileSync(resolve(root, 'index.html'), html);
-writeFileSync(resolve(root, 'story.js'), `window.STORY = ${JSON.stringify(story)};\n`);
-console.log(`Built ${story.duration}s composition; checked annotation, caption, camera and audio windows.`);
+  return durations.get(src);
+});
+const escapeHtml=s=>String(s).replaceAll('&','&amp;').replaceAll('"','&quot;').replaceAll('<','&lt;').replaceAll('>','&gt;');
+const boardPath=asset(story.board.src);
+const board=story.board.type==='svg' ? readFileSync(boardPath,'utf8') :
+  `<image href="${escapeHtml(story.board.src)}" x="0" y="0" width="${story.board.width}" height="${story.board.height}" preserveAspectRatio="xMidYMid meet"/>`;
+const paths=story.annotations.map(a=>`<path id="${a.id}" class="mark" d="${a.path}"/>`).join('\n');
+const audio=story.audio.map((c,i)=>`<audio id="voice${i}" src="${escapeHtml(c.src)}" data-start="${c.start}" data-duration="${c.duration}" data-track-index="2"></audio>`).join('\n');
+const c=story.canvas;
+const values={WIDTH:c.width,HEIGHT:c.height,FPS:c.fps,VIEWPORT_HEIGHT:c.viewportHeight,
+  BOARD_WIDTH:story.board.width,BOARD_HEIGHT:story.board.height,BOARD_LABEL:escapeHtml(story.board.label??'信息图'),
+  MARGIN:c.margin,CAPTION_BOTTOM:Math.round(c.rail*.18),CAPTION_HEIGHT:Math.round(c.rail*.65),
+  CAPTION_FONT_SIZE:c.fontSize,DURATION:story.duration,BOARD_CONTENT:board,ANNOTATION_PATHS:paths};
+let html=readFileSync(resolve(root,'index.html.in'),'utf8');
+for(const [key,value] of Object.entries(values))html=html.replaceAll(`{{${key}}}`,()=>String(value));
+assert(!/\{\{[A-Z_]+\}\}/.test(html),'Unresolved template field');
+html=html.replace('<!-- Captions and audio are built synchronously from story.js. -->',()=>audio)
+  .replace('<script src="runtime.js"></script>',()=>'<script>\n'+readFileSync(resolve(root,'runtime.js'),'utf8')+'\n</script>');
+const gsap=resolve(root,'node_modules/gsap/dist/gsap.min.js');
+assert(existsSync(gsap),'Run pnpm install before building');
+mkdirSync(resolve(root,'assets'),{recursive:true});
+copyFileSync(gsap,resolve(root,'assets/gsap.min.js'));
+writeFileSync(resolve(root,'index.html'),html);
+writeFileSync(resolve(root,'story.js'),`window.STORY = ${JSON.stringify(story)};\n`);
+writeFileSync(resolve(root,'build-report.json'),JSON.stringify({duration:story.duration,canvas:story.canvas,
+  audio:story.audio.map(({src,start,duration})=>({src,start,duration})),shots:story.shots,reviewTimes:story.reviewTimes},null,2)+'\n');
+console.log(`Built ${c.width}×${c.height}, ${story.duration.toFixed(3)}s. Measured ${story.audio.length} audio clips; fitted camera regions and generated temporary underlines.`);
+console.log(`Review emphasis boundaries: hyperframes check --at ${story.reviewTimes.join(',')}`);

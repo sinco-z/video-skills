@@ -1,4 +1,4 @@
 interface:
-  display_name: "信息图讲解视频"
+  display_name: "聚焦讲图"
   short_description: "制作单画布讲解视频，按旁白聚焦并用会消失的红线强调内容"
   default_prompt: "使用 $infographic-explainer 把我的内容制作成带中文旁白、局部运镜和临时红笔批注的信息图讲解视频。"

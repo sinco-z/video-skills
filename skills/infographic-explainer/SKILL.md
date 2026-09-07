@@ -1,44 +1,57 @@
 ---
 name: infographic-explainer
-description: Create or edit single-canvas infographic explainer videos with HyperFrames, narration-led camera pans and zooms, fixed subtitles, and one temporary hand-drawn annotation at a time. Use for whiteboard-style narrated diagrams, image walkthroughs, and knowledge-map videos; not generic slideshows or generative image-to-video.
+description: Make focus-and-annotate explainer videos (聚焦讲图) from editable diagrams or supplied images using HyperFrames. Use for a continuous infographic canvas with narration-led camera moves, fixed captions, and one temporary red underline at a time, including landscape or portrait exports. Not for slideshows or generative image-to-video.
 ---
 
-# Infographic explainer
+# 聚焦讲图 / Infographic explainer
 
-Produce a narrated tour of one continuous board. Follow the user's reference, language, content and requested duration. Defaults when unspecified: warm white paper, handwritten-looking Chinese type, dark ink, pale yellow cards, red emphasis, 26 seconds at 1440×1080/30fps. Do not turn example business claims into assertions for a different topic.
+Guide attention around one continuous board: context → relevant region → temporary underline → next idea. Follow the user's reference, topic, language, duration and voice preferences. The public skill identifier remains `infographic-explainer` for installation continuity; the Chinese display name is 聚焦讲图.
 
-## Start from the working template
+## Start with the right inputs
 
-Run `node scripts/init-project.mjs <new-output-directory>` relative to this skill's directory, then `pnpm install` in the new project. The initializer refuses to overwrite an existing path. For edits, use the existing project rather than initializing again.
+Use the conversation's existing brief; do not repeat questions already answered. Determine the board source, spoken content, output aspect ratio and available voice. Ask only for a genuinely missing input that blocks work. Default visual style: warm white, dark handwritten-looking Chinese text, pale yellow cards and red annotation. Default sample: 26 seconds, classic 1440×1080 at 30fps.
 
-The template includes a 26-second example, six pre-generated Chinese narration clips, and a deterministic GSAP timeline. HyperFrames and GSAP are pinned in its package manifest. It does not require another installed skill; if HyperFrames skills are available, consult the relevant one for substantial framework changes.
+Choose the board source deliberately:
 
-Read [the project guide](references/project-guide.md) when editing content, narration, framing or timing. Read [the style prompt](references/style-prompt.md) for visual direction or when a user specifically wants a generated bitmap background.
+- Text-heavy new content: author `assets/board.svg`, with readable hierarchy and deliberate line breaks. Replace the demo topic and demo audio together.
+- Existing image or user-requested generated image: use the bitmap as supplied; do not redraw it merely to add animation. Use an available image-generation tool only when needed and report the actual image source.
+- Provided voice: keep it. Otherwise use an available TTS provider. The optional macOS helper is a test voice, not a required voice or an imitation of the reference speaker.
 
-## Choose the board source
+## Create a project
 
-- For text-heavy diagrams, prefer editable SVG/HTML. Assign IDs to emphasis paths and stable regions. Use fonts installed on the rendering machine or supplied with an appropriate license.
-- When the user provides or requests an image, use that image in the board coordinate space. Generate a bitmap only with an available image-generation tool and disclose that choice. Preserve its aspect ratio. Mark regions manually or with verified OCR; subtitles alone do not identify reliable image coordinates.
-- Do not regenerate a supplied image just to add zooming or annotations. Check readability at the largest planned zoom.
+Run from the skill folder:
 
-## Choreograph to narration
+```sh
+node scripts/init-project.mjs <new-directory> --preset classic
+# Alternatives: --preset landscape or --preset portrait
+# Add --image /absolute/path/board.png to import an existing bitmap.
+```
 
-Finalize the spoken text and audio first, then use measured clip durations or aligned transcript timestamps. The included timing is a curated example, not automatic speech-to-region alignment. Replace both the sample content and sample audio for a new topic.
+The initializer refuses to overwrite a project. In the new project run `pnpm install` then `pnpm preflight`. For edits, use the existing project. HyperFrames and GSAP are pinned; no separate skill or secret key is required. Read [the project guide](references/project-guide.md) for fields, scripts and migration; read [the style prompt](references/style-prompt.md) when choosing visual direction or generating a bitmap.
 
-Use semantic beats, not every subtitle change, to choose camera targets. Start with context, pan/zoom smoothly, hold for reading, and return to context when useful. Default camera moves take 1–1.5 seconds. Keep target content clear of the subtitle rail.
+## Author content, regions and timing
 
-Critical annotation behavior:
+Keep the content in `assets/board.svg` or the imported bitmap, and production settings in `story.json`. Leave `index.html.in` and `runtime.js` alone for ordinary topic changes.
 
-- Draw a slightly irregular red SVG stroke from left to right; the cursor follows its endpoint.
-- Keep annotations and the cursor inside the same transformed board as the content. Subtitles remain in screen coordinates.
-- Show at most one annotation at a time. Draw, hold briefly, fade out over about 0.15 seconds, then explicitly set opacity to zero. Finish before the next annotation; normally clear it before a camera move.
-- Hide paths before their start, including round-cap dots. Hide the cursor before repositioning it. Returning to the full board must not expose old marks.
-- Construct a paused, registered timeline synchronously. Use seekable GSAP animation, not wall-clock timers, async timeline setup or arbitrary callbacks to play media.
+1. Finalize speech before assigning emphasis times. `pnpm build` measures real audio durations with ffprobe; omit manually guessed durations. Existing TTS timestamps or manual listening can determine word emphasis. Character counts do not establish word timing.
+2. Define named rectangles in board coordinates. Use larger context regions for camera targets and tight phrase regions for underlines. Verify that boxes match visible text, particularly for OCR-derived bitmap regions.
+3. Use `target` names for the initial camera and shots. The builder fits them into the safe viewport for the selected aspect ratio. If a dense region becomes too small in portrait, split the content or choose a smaller region; do not claim the preset alone solves readability.
+4. Reference phrase targets from annotations. The builder generates the underline path; only set start/draw/end times. Use semantic beats rather than moving at every subtitle change.
+5. Caption text stays below the camera viewport. Split long sentences instead of shrinking them until unreadable.
 
-## Verify and deliver
+Use short clear moves (usually 1–1.5s), then hold while speaking. Return to the whole board when useful. Do not turn the sample's business content into assertions about a new topic.
 
-Run `pnpm check` (build + HyperFrames lint/runtime/layout/motion/contrast checks). The build rejects overlapping annotation, caption, camera-motion and narration windows. Inspect rendered frames during drawing, just after a line expires, at the next emphasis and at the final wide shot. Confirm fonts, audio presence, caption timing and readable framing.
+## Preserve the style's essential behavior
 
-The example uses a clipped camera viewport above a separate subtitle rail. Its documented overlap exemption is for offscreen SVG geometry; visually check it and do not use exemptions to conceal actual visible overlap.
+- Show at most one red annotation at a time. Draw → brief hold → ~0.15s fade → explicit opacity zero. Hide it before the next mark and normally before the next camera move.
+- Keep the path and following cursor in board coordinates; keep subtitles in screen coordinates. No round-cap dots or cursor jumps before drawing starts, and no accumulated marks at the end.
+- Use explicit `#id` strings for SVG GSAP targets. Direct SVG element targets can look correct in preview yet disappear in HyperFrames 0.8.30 export.
+- Construct the paused, registered GSAP timeline synchronously. Do not replace seekable animation with wall-clock timers or media-play callbacks.
 
-Render using `pnpm render --output renders/final.mp4 --quality high --workers 2` (adjust workers to machine resources). Decode-check the MP4 and verify duration and audio/video streams. Deliver the video and editable project, explaining the actual image and voice sources. Do not publish, install globally, or send to third parties merely because this skill was invoked.
+## Validate the actual deliverable
+
+Run `pnpm check`. Build validation covers named regions, timing overlap, audio length and duration; HyperFrames covers runtime/layout/motion/contrast. Use `build-report.json` review times to inspect each line during drawing and just after it expires, plus the final overview. The example's documented overlap exemption covers clipped-off SVG bounds only, not visible text collisions.
+
+Render with `pnpm render --output renders/final.mp4 --quality high --workers 2`, adjusting workers to hardware. Decode-check the MP4, confirm its duration and audio stream, and inspect frames from the exported file: passing preview checks is not sufficient. Review font availability and caption placement on the rendering machine.
+
+Deliver the MP4 and editable project. State the actual image and voice sources and what is automated. Region selection and narration-to-content matching remain authored decisions; this is not arbitrary-image automatic understanding. Publishing, global installation or sending files is not implied by invoking the skill.

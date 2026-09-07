@@ -1,45 +1,107 @@
 {
+  "version": 2,
+  "canvas": {
+    "preset": "classic",
+    "fps": 30
+  },
+  "board": {
+    "type": "svg",
+    "src": "assets/board.svg",
+    "width": 1600,
+    "height": 1050,
+    "label": "商业模式信息图"
+  },
+  "regions": {
+    "overview": {
+      "x": 60,
+      "y": 20,
+      "width": 1480,
+      "height": 1000
+    },
+    "core-idea": {
+      "x": 65,
+      "y": 30,
+      "width": 730,
+      "height": 525
+    },
+    "income-goal": {
+      "x": 875,
+      "y": 20,
+      "width": 660,
+      "height": 250
+    },
+    "service-flow": {
+      "x": 385,
+      "y": 320,
+      "width": 845,
+      "height": 370
+    },
+    "customer-value": {
+      "x": 785,
+      "y": 705,
+      "width": 735,
+      "height": 230
+    },
+    "sellable-system": {
+      "x": 335.5,
+      "y": 143,
+      "width": 273,
+      "height": 41
+    },
+    "eight-digits": {
+      "x": 1270,
+      "y": 69,
+      "width": 170.4,
+      "height": 73
+    },
+    "customization": {
+      "x": 730,
+      "y": 361,
+      "width": 156,
+      "height": 41
+    },
+    "recurring-service": {
+      "x": 1025,
+      "y": 361,
+      "width": 156,
+      "height": 41
+    },
+    "customer-retention": {
+      "x": 837,
+      "y": 780,
+      "width": 258,
+      "height": 46
+    }
+  },
   "duration": 26,
   "initialCamera": {
-    "x": 64,
-    "y": 72,
-    "scale": 0.82
+    "target": "overview"
   },
   "shots": [
     {
       "start": 3.15,
-      "x": -58,
-      "y": 116,
-      "scale": 1.63,
-      "duration": 1.2
+      "duration": 1.2,
+      "target": "core-idea"
     },
     {
       "start": 8,
-      "x": -1530,
-      "y": 161,
-      "scale": 1.94,
-      "duration": 1.3
+      "duration": 1.3,
+      "target": "income-goal"
     },
     {
       "start": 12.55,
-      "x": -465,
-      "y": -224,
-      "scale": 1.38,
-      "duration": 1.2
+      "duration": 1.2,
+      "target": "service-flow"
     },
     {
       "start": 17.2,
-      "x": -797,
-      "y": -662,
-      "scale": 1.48,
-      "duration": 1.2
+      "duration": 1.2,
+      "target": "customer-value"
     },
     {
       "start": 22,
-      "x": 64,
-      "y": 72,
-      "scale": 0.82,
-      "duration": 1.6
+      "duration": 1.6,
+      "target": "overview"
     }
   ],
   "annotations": [
@@ -47,31 +109,36 @@
       "id": "line1",
       "start": 6.35,
       "draw": 0.78,
-      "end": 7.95
+      "end": 7.95,
+      "target": "sellable-system"
     },
     {
       "id": "line2",
       "start": 10.1,
       "draw": 0.68,
-      "end": 12.2
+      "end": 12.2,
+      "target": "eight-digits"
     },
     {
       "id": "line3",
       "start": 14.9,
       "draw": 0.62,
-      "end": 15.95
+      "end": 15.95,
+      "target": "customization"
     },
     {
       "id": "line4",
       "start": 16,
       "draw": 0.66,
-      "end": 17.15
+      "end": 17.15,
+      "target": "recurring-service"
     },
     {
       "id": "line5",
       "start": 19.4,
       "draw": 0.85,
-      "end": 21.5
+      "end": 21.5,
+      "target": "customer-retention"
     }
   ],
   "captions": [
@@ -109,37 +176,31 @@
   "audio": [
     {
       "start": 0.5,
-      "duration": 2.887729,
       "text": "先看全貌，这是一张商业模式信息图。",
       "src": "assets/voice-0.wav"
     },
     {
       "start": 4.0,
-      "duration": 3.8465,
       "text": "核心是，把现成的人工智能能力，做成可售卖的系统。",
       "src": "assets/voice-1.wav"
     },
     {
       "start": 9.0,
-      "duration": 3.574708,
       "text": "七位数到八位数，是图里的目标，不是收益保证。",
       "src": "assets/voice-2.wav"
     },
     {
       "start": 13.5,
-      "duration": 3.076833,
       "text": "从工具箱，到行业定制，再到持续服务。",
       "src": "assets/voice-3.wav"
     },
     {
       "start": 18.0,
-      "duration": 2.969979,
       "text": "客户持续使用，服务才有机会持续收费。",
       "src": "assets/voice-4.wav"
     },
     {
       "start": 22.5,
-      "duration": 3.224854,
       "text": "一张图，配合聚焦和划线，就能讲清思路。",
       "src": "assets/voice-5.wav"
     }

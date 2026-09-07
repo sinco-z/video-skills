@@ -1,0 +1,9 @@
+node_modules/
+renders/
+snapshots/
+.hyperframes/
+index.html
+story.js
+build-report.json
+assets/gsap.min.js
+assets/.narration-*/

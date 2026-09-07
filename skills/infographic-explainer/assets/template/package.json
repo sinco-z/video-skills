@@ -9,7 +9,10 @@
     "build": "node scripts/build.mjs",
     "check": "pnpm build && hyperframes check",
     "render": "pnpm build && hyperframes render",
-    "preview": "pnpm build && hyperframes preview --background"
+    "preview": "pnpm build && hyperframes preview --background",
+    "test": "node --test scripts/story.test.mjs",
+    "narrate": "node scripts/narrate.mjs",
+    "preflight": "node scripts/doctor.mjs"
   },
   "dependencies": {
     "hyperframes": "0.8.30",
