@@ -1,0 +1,11 @@
+node_modules/
+.DS_Store
+__pycache__/
+.venv/
+dist/
+renders/
+snapshots/
+.hyperframes/
+**/assets/gsap.min.js
+**/assets/template/index.html
+**/assets/template/story.js

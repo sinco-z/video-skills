@@ -1,0 +1,18 @@
+{
+  "name": "infographic-explainer-video",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "check": "pnpm build && hyperframes check",
+    "render": "pnpm build && hyperframes render",
+    "preview": "pnpm build && hyperframes preview --background"
+  },
+  "dependencies": {
+    "hyperframes": "0.8.30",
+    "gsap": "3.14.2"
+  }
+}
