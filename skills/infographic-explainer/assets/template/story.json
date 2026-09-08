@@ -16,7 +16,11 @@
       "x": 60,
       "y": 20,
       "width": 1480,
-      "height": 1000
+      "height": 1000,
+      "keywords": [
+        "全貌",
+        "一张图"
+      ]
     },
     "core-idea": {
       "x": 65,
@@ -46,31 +50,49 @@
       "x": 335.5,
       "y": 143,
       "width": 273,
-      "height": 41
+      "height": 41,
+      "text": "可售卖的系统",
+      "keywords": [
+        "可售卖系统"
+      ],
+      "cameraTarget": "core-idea",
+      "underline": true
     },
     "eight-digits": {
       "x": 1270,
       "y": 69,
       "width": 170.4,
-      "height": 73
+      "height": 73,
+      "text": "八位数",
+      "cameraTarget": "income-goal",
+      "underline": true
     },
     "customization": {
       "x": 730,
       "y": 361,
       "width": 156,
-      "height": 41
+      "height": 41,
+      "text": "行业定制",
+      "cameraTarget": "service-flow",
+      "underline": true
     },
     "recurring-service": {
       "x": 1025,
       "y": 361,
       "width": 156,
-      "height": 41
+      "height": 41,
+      "text": "持续服务",
+      "cameraTarget": "service-flow",
+      "underline": true
     },
     "customer-retention": {
       "x": 837,
       "y": 780,
       "width": 258,
-      "height": 46
+      "height": 46,
+      "text": "客户持续使用",
+      "cameraTarget": "customer-value",
+      "underline": true
     }
   },
   "duration": 26,

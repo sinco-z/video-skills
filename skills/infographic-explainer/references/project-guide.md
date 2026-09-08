@@ -87,3 +87,7 @@ Fonts are not bundled. Local board candidates are Kaiti SC / KaiTi / Noto Serif 
 ## Updating an older project
 
 The skill identifier stays `infographic-explainer`. Existing v0.1 projects can keep rendering with their original engine. v0.2 starts new projects with `version: 2`. To migrate a project, first create a new directory, move its diagram into `assets/board.svg` (or import the image), define regions, then copy/adapt audio and timing. Do not replace an existing project's engine blindly: the old inline SVG paths and manual camera config require migration.
+
+## Optional transcript planner
+
+For timed narration and region text/keywords, use `pnpm plan transcript.json` to create a separate draft and explanation report. See [transcript planning](transcript-planning.md). This is additive to the v0.2 format; existing projects and manual timelines remain valid.

@@ -8,7 +8,18 @@
 
 [经典画幅样片](examples/infographic-explainer-26s.mp4) · [竖屏样片](examples/infographic-explainer-portrait.mp4) · [下载最新安装包](https://github.com/sinco-z/video-skills/releases/latest) · [技能说明](skills/infographic-explainer/SKILL.md)
 
-## v0.2 改进了什么
+## v0.3：按讲稿生成镜头草稿
+
+区域可配置文字和同义关键词。输入带时间戳的讲稿，运行 `pnpm plan transcript.json`，即可生成独立的 `story.draft.json` 和 `plan-report.json`，原有时间线不会被覆盖。
+
+- 唯一匹配时生成镜头、字幕和临时红线草稿。
+- 连续讲同一区域时保持镜头。
+- 多个匹配、没有匹配、句子过短时列出待复核项。
+- 支持显式指定区域，以及已确认的关键词时间 `emphasisAt`。
+
+这是可解释的关键词/同义词规则匹配，不是语义模型或 OCR。即使没有歧义，仍需核对讲解含义及划线时机。[配置与使用说明](skills/infographic-explainer/references/transcript-planning.md)
+
+## v0.2 已有能力
 
 - **用区域名安排镜头**：写 `target: "core-idea"`，自动计算缩放和平移。
 - **自动生成下划线**：圈定关键词矩形，不再手写 SVG 路径；仍保持一次一条、到时消失。

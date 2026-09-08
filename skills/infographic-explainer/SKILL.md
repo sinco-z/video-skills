@@ -41,6 +41,10 @@ Keep the content in `assets/board.svg` or the imported bitmap, and production se
 
 Use short clear moves (usually 1–1.5s), then hold while speaking. Return to the whole board when useful. Do not turn the sample's business content into assertions about a new topic.
 
+## Draft from an existing timed transcript
+
+When sentence timestamps exist, add text/keyword metadata to regions and use `pnpm plan transcript.json` to produce a separate draft. Read [transcript planning](references/transcript-planning.md) first. Inspect every proposed match and timing warning, resolve ambiguous passages, then apply the reviewed draft and run the normal verification workflow. Never overwrite a carefully authored timeline automatically. This is deterministic keyword matching with curated synonyms, not automatic semantic understanding or word alignment.
+
 ## Preserve the style's essential behavior
 
 - Show at most one red annotation at a time. Draw → brief hold → ~0.15s fade → explicit opacity zero. Hide it before the next mark and normally before the next camera move.
